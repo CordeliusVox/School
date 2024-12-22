@@ -244,43 +244,43 @@ RETURN			1		end
 NAMECALL		115		var18 = var18:Connect(var20) -- UserInputService.InputBegan:Connect(function(Input, GamePro) from above!!!!!!!
 
 LOADN			117		var18 = 99
-JUMPIFNOTLT		118		if var18 < var15 then
-LOADB			0			var18 = false -- [REDUNDANT]
-SETTABLEKS		1			var9["Visible"] = var18
-SETTABLEKS		2		else
-LOADB			0			var18 = true -- [REDUNDANT]
-SETTABLEKS		1			var9["Visible"] = var18
+JUMPIFNOTLT		118		if var18 < var15 then -- if 99 < var15 (100) then
+LOADB			0			var18 = false 
+SETTABLEKS		1			var9["Visible"] = var18 -- Sprint gui.Visible = false
+SETTABLEKS		2		else -- else
+LOADB			0			var18 = true 
+SETTABLEKS		1			var9["Visible"] = var18 -- Sprint gui.Visible = true
 SETTABLEKS		2		end
-JUMPXEQKB		120		if var12 == true then
+JUMPXEQKB		120		if var12 == true then -- if Boolean1 is true then
 LOADN			0			var18 = 0
-JUMPIFNOTLT		1			if var18 < var15 then
-GETTABLEKS		0				var18 = var3["MoveDirection"] -- [REDUNDANT]
-LOADK			2				var19 = Vector3.new(0, 0, 0, 0)
-JUMPIFEQ		3				if var18 ~= var19 then
-SUBK			0					var15 = var15 - 1
+JUMPIFNOTLT		1			if var18 < var15 then -- if 0 < var15 (100) then
+GETTABLEKS		0				var18 = var3["MoveDirection"] -- Humanoid.MoveDirection
+LOADK			2				var19 = Vector3.new(0, 0, 0)
+JUMPIFEQ		3				if var18 ~= var19 then -- if Humanoid.MoveDirection ~= Vector3.new(0, 0, 0) then
+SUBK			0					var15 = var15 - 1 -- 100 - 1
 SUBK			0				end
 JUMPIFEQ		4			end
 LOADN			3			var18 = 1
-JUMPIFNOTLT		4			if var15 < var18 then
-LOADN			0				var18 = 14 -- [REDUNDANT]
-SETTABLEKS		1				var3["WalkSpeed"] = var18
-NAMECALL		3				var18 = var5:Stop()
-LOADB			5				var12 = false -- [REDUNDANT]
-LOADB			6				var13 = false
-JUMPXEQKB		7				if var12 == false then
+JUMPIFNOTLT		4			if var15 < var18 then -- if var15 (100) < 1 then
+LOADN			0				var18 = 14
+SETTABLEKS		1				var3["WalkSpeed"] = var18 -- Setting humanoid's walkspeed to 14
+NAMECALL		3				var18 = var5:Stop() --  Stopping sprint animtion
+LOADB			5				var12 = false -- setting Boolean1 to false
+LOADB			6				var13 = false -- Setting Boolean2 to false
+JUMPXEQKB		7				if var12 == false then -- if Boolean1 is false then
 LOADN			0					var18 = 100
-JUMPIFNOTLT		1					if var15 < var18 then
-ADDK			0						var15 = var15 + 1
+JUMPIFNOTLT		1					if var15 < var18 then -- if var15 (100) < 100 then
+ADDK			0						var15 = var15 + 1 -- var15 + 1
 ADDK			0					end
 JUMPIFNOTLT		2				end
 JUMPXEQKB		8			end
-JUMPIFNOTLT		5		elseif var12 == false then
+JUMPIFNOTLT		5		elseif var12 == false then -- elseif Boolean1 is false then
 LOADN			0			var18 = 100
-JUMPIFNOTLT		1			if var15 < var18 then
-ADDK			0				var15 = var15 + 1
+JUMPIFNOTLT		1			if var15 < var18 then -- if var15 (100) < 100 then
+ADDK			0				var15 = var15 + 1 -- var15 + 1
 ADDK			0			end
 JUMPIFNOTLT		2		end
-CALL			122		var18 = var18(var19, var20) -- [REDUNDANT]
+CALL			122		var18 = var18(var19, var20) 
 SETTABLEKS		123		var10["Size"] = var18
 GETIMPORT		125		var18 = wait -- [REDUNDANT]
 CALL			127		var18 = var18()
