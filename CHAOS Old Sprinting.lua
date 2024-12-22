@@ -3,71 +3,72 @@ Class = LocalScript
 Path = StarterGui.Sprinting.Sprinting
 
 JUMPIF			0		repeat
-GETIMPORT		0			var0 = wait -- [REDUNDANT]
+GETIMPORT		0			var0 = wait 
 CALL			2			var0 = var0()
-GETIMPORT		3			var2 = game -- [REDUNDANT]
-GETTABLEKS		5			var1 = var2["Players"] -- [REDUNDANT]
-GETTABLEKS		7			var0 = var1["LocalPlayer"] -- [REDUNDANT]
+GETIMPORT		3			var2 = game 
+GETTABLEKS		5			var1 = var2["Players"] 
+GETTABLEKS		7			var0 = var1["LocalPlayer"] 
 GETTABLEKS		8		until var0
-GETIMPORT		1		var2 = game -- [REDUNDANT]
-GETTABLEKS		3		var1 = var2["Players"] -- [REDUNDANT]
+GETIMPORT		1		var2 = game 
+GETTABLEKS		3		var1 = var2["Players"] 
 JUMPIF			5		repeat
 GETTABLEKS		0			var0 = var1["LocalPlayer"]
-GETIMPORT		2			var1 = wait -- [REDUNDANT]
+GETIMPORT		2			var1 = wait 
 CALL			4			var1 = var1()
-GETTABLEKS		5			var1 = var0["Character"] -- [REDUNDANT]
+GETTABLEKS		5			var1 = var0["Character"]
 GETTABLEKS		6		until var1
 GETTABLEKS		6		var1 = var0["Character"]
-LOADK			8		var4 = "HumanoidRootPart" -- [REDUNDANT]
+LOADK			8		var4 = "HumanoidRootPart" 
 NAMECALL		9		var2 = var1:WaitForChild(var4)
-LOADK			11		var5 = "Humanoid" -- [REDUNDANT]
+LOADK			11		var5 = "Humanoid" 
 NAMECALL		12		var3 = var1:WaitForChild(var5)
-LOADK			14		var6 = "Animator" -- [REDUNDANT]
+LOADK			14		var6 = "Animator" 
 NAMECALL		15		var4 = var3:WaitForChild(var6)
-GETIMPORT		17		var7 = script -- [REDUNDANT]
+GETIMPORT		17		var7 = script 
 LOADK			19		var9 = "Animation"
 NAMECALL		20		var7 = var7:WaitForChild(var9)
 NAMECALL		22		var5 = var4:LoadAnimation(var7)
-GETIMPORT		24		var8 = script -- [REDUNDANT]
+GETIMPORT		24		var8 = script 
 LOADK			26		var10 = "Animation2"
 NAMECALL		27		var8 = var8:WaitForChild(var10)
 NAMECALL		29		var6 = var4:LoadAnimation(var8)
-LOADK			31		var9 = "Sitting" -- [REDUNDANT]
+LOADK			31		var9 = "Sitting" 
 NAMECALL		32		var7 = var1:WaitForChild(var9)
-GETIMPORT		34		var8 = game -- [REDUNDANT]
-LOADK			36		var10 = "UserInputService" -- [REDUNDANT]
+GETIMPORT		34		var8 = game 
+LOADK			36		var10 = "UserInputService" 
 NAMECALL		37		var8 = var8:GetService(var10)
-GETIMPORT		39		var10 = script -- [REDUNDANT]
-GETTABLEKS		41		var9 = var10["Parent"] -- [REDUNDANT]
-LOADK			43		var11 = "Frame" -- [REDUNDANT]
+GETIMPORT		39		var10 = script 
+GETTABLEKS		41		var9 = var10["Parent"] 
+LOADK			43		var11 = "Frame" 
 NAMECALL		44		var9 = var9:WaitForChild(var11)
-LOADK			46		var12 = "Frame" -- [REDUNDANT]
+LOADK			46		var12 = "Frame" 
 NAMECALL		47		var10 = var9:WaitForChild(var12)
 GETIMPORT		49		var14 = script
 GETTABLEKS		51		var13 = var14["Parent"]
 GETTABLEKS		53		var12 = var13["Sprint"]
 GETTABLEKS		55		var11 = var12["TextButton"]
-LOADB			57		var12 = false
-LOADB			58		var13 = false
-LOADB			59		var14 = true -- [REDUNDANT]
+LOADB			57		var12 = false -- Bool1
+LOADB			58		var13 = false -- Bool2
+LOADB			59		var14 = true -- Bool3
 LOADN			60		var15 = 100
-LOADK			61		var18 = "Ragdolled" -- [REDUNDANT]
+LOADK			61		var18 = "Ragdolled" 
 NAMECALL		62		var16 = var1:WaitForChild(var18)
-LOADN			64		var17 = 14 -- [REDUNDANT]
-SETTABLEKS		65		var3["WalkSpeed"] = var17
-GETTABLEKS		67		var17 = var8["InputBegan"] -- [REDUNDANT]
-NEWCLOSURE		69		upvalue[1_var13] = var13
-NEWCLOSURE		70		upvalue[2_var3] = var3
-NEWCLOSURE		71		upvalue[3_var7] = var7
-NEWCLOSURE		72		var19 = function(arg0, arg1) -- line: 30
-JUMPIF			0			if not arg1 then
-GETTABLEKS		0				var2 = arg0["UserInputType"] -- [REDUNDANT]
-GETIMPORT		2				var3 = Enum["UserInputType"]["Keyboard"] -- [REDUNDANT]
-JUMPIFNOTEQ		4				if var2 == var3 then
-GETTABLEKS		0					var2 = arg0["KeyCode"]
-GETIMPORT		2					var3 = Enum["KeyCode"]["LeftShift"]
-JUMPIFNOTEQ		4					if var2 == var3 then
-LOADB			0						var2 = true -- [REDUNDANT]
+LOADN			64		var17 = 14 
+SETTABLEKS		65		var3["WalkSpeed"] = var17 -- Setting default speed to var17 (14)
+
+GETTABLEKS		67		var17 = var8["InputBegan"] -- UserInputService.InputBegan
+NEWCLOSURE		69		upvalue[1_var13] = var13 -- Boolean2
+NEWCLOSURE		70		upvalue[2_var3] = var3 -- Humanoid
+NEWCLOSURE		71		upvalue[3_var7] = var7 -- Animation ( Probably sprint animation )
+NEWCLOSURE		72		var19 = function(arg0, arg1) -- line: 30 -- UserInputService.InputBegan:Connect(function(Input, GamePro)
+JUMPIF			0			if not arg1 then -- If not GamePro then
+GETTABLEKS		0				var2 = arg0["UserInputType"] -- Input.UserInputType
+GETIMPORT		2				var3 = Enum["UserInputType"]["Keyboard"] -- Enum.UserInputType.Keyboard
+JUMPIFNOTEQ		4				if var2 == var3 then -- If Input.UserInputType == Enum.UserInputType.Keyboard then
+GETTABLEKS		0					var2 = arg0["KeyCode"] -- Input.KeyCode
+GETIMPORT		2					var3 = Enum["KeyCode"]["LeftShift"] -- Enum.KeyCode.LeftShift
+JUMPIFNOTEQ		4					if var2 == var3 then -- if Input.KeyCode == Enum.KeyCode.LeftShift then
+LOADB			0						var2 = true -- Creating a bool (Set to true)
 SETUPVAL		1						upvalue[upvalue[1_var13]] = var2
 GETUPVAL		2						var2 = upvalue[upvalue[2_var3]]
 LOADN			3						var3 = 20
