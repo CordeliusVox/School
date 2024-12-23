@@ -2,200 +2,242 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 
-class AdvancedFoodMenu
+class ArielRestaurantMenu
 {
+    static readonly MenuSettings Settings = new MenuSettings();
+
     static void Main()
     {
-        Console.Title = "Gourmet Delight - Advanced Food Menu";
+        Console.Title = Settings.RestaurantName;
         ShowWelcomeMessage();
-        ShowMenu();
+        RunMenu();
     }
 
     static void ShowWelcomeMessage()
     {
-        Console.ForegroundColor = ConsoleColor.Cyan;
-        Console.WriteLine("==========================================");
-        Console.WriteLine("        WELCOME TO GOURMET DELIGHT        ");
-        Console.WriteLine("==========================================");
-        Console.ResetColor();
-        Thread.Sleep(1000);
-        Console.WriteLine("Enjoy the finest selection of dishes from around the world.");
-        Thread.Sleep(1000);
-        Console.WriteLine("You can place orders, calculate totals, and much more!\n");
-        Thread.Sleep(1500);
+        PrintDivider();
+        PrintColoredText($"WELCOME TO {Settings.RestaurantName.ToUpper()}!", Settings.TitleColor);
+        PrintDivider();
+        Thread.Sleep(Settings.Delay);
+        PrintColoredText("Enjoy the finest selection of dishes from around the world.", Settings.DefaultColor);
+        Thread.Sleep(Settings.Delay);
+        PrintColoredText("You can place orders, calculate totals, and much more!", Settings.DefaultColor);
+        Thread.Sleep(Settings.Delay);
     }
 
-    static void ShowMenu()
+    static void RunMenu()
     {
-        Dictionary<string, List<(string Name, double Price)>> menu = new Dictionary<string, List<(string Name, double Price)>>()
-        {
-            { "Appetizers", new List<(string, double)>() {
-                ("Garlic Bread", 5.99), ("Bruschetta", 6.99), ("Spring Rolls", 7.99)
-            }},
-            { "Main Courses", new List<(string, double)>() {
-                ("Grilled Salmon", 15.99), ("Chicken Alfredo", 14.99), ("Vegetarian Lasagna", 13.99)
-            }},
-            { "Desserts", new List<(string, double)>() {
-                ("Cheesecake", 6.99), ("Chocolate Lava Cake", 7.99), ("Tiramisu", 8.99)
-            }},
-            { "Beverages", new List<(string, double)>() {
-                ("Iced Tea", 2.99), ("Cappuccino", 3.99), ("Fresh Lemonade", 2.49)
-            }}
-        };
-
-        List<(string Name, int Quantity, double Price)> order = new List<(string, int, double)>();
+        var menu = Settings.FoodMenu;
+        var order = new List<OrderItem>();
 
         while (true)
         {
             Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("========= GOURMET MENU =========");
-            Console.ResetColor();
+            PrintColoredText("========= FOOD MENU =========", Settings.TitleColor);
+            DisplayCategories(menu);
 
-            int categoryNumber = 1;
-            foreach (var category in menu.Keys)
+            PrintColoredText("\nSelect a category by number, type 'checkout' to finish, or 'exit' to leave:", Settings.DefaultColor);
+            string input = Console.ReadLine()?.ToLower();
+
+            if (input == "checkout")
             {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"{categoryNumber}. {category}");
-                Console.ResetColor();
-                categoryNumber++;
+                ProcessCheckout(order);
+                break;
             }
-
-            Console.WriteLine("\nPlease select a category by number, or type 'checkout' to finish your order:");
-
-            string input = Console.ReadLine();
-            if (input.ToLower() == "checkout")
+            else if (input == "exit")
             {
-                ShowOrderSummary(order);
+                PrintColoredText("\nThank you for visiting! Have a great day!", Settings.SuccessColor);
+                Thread.Sleep(Settings.Delay);
                 break;
             }
 
-            if (int.TryParse(input, out int selectedCategory) && selectedCategory > 0 && selectedCategory <= menu.Keys.Count)
+            if (int.TryParse(input, out int categoryIndex) && IsValidIndex(categoryIndex, menu.Count))
             {
-                string category = GetCategoryByIndex(menu, selectedCategory - 1);
-                PlaceOrder(menu, category, order);
+                string category = menu.Keys[categoryIndex - 1];
+                PlaceOrder(menu[category], order);
             }
             else
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Invalid selection. Please try again.");
-                Console.ResetColor();
-                Thread.Sleep(1500);
+                PrintColoredText("Invalid selection. Please try again.", Settings.ErrorColor);
+                Thread.Sleep(Settings.Delay);
             }
         }
     }
 
-    static string GetCategoryByIndex(Dictionary<string, List<(string Name, double Price)>> menu, int index)
+    static void DisplayCategories(Dictionary<string, List<FoodItem>> menu)
     {
-        int currentIndex = 0;
+        int index = 1;
         foreach (var category in menu.Keys)
         {
-            if (currentIndex == index)
-            {
-                return category;
-            }
-            currentIndex++;
+            PrintColoredText($"{index}. {category}", Settings.CategoryColor);
+            index++;
         }
-        return null;
     }
 
-    static void PlaceOrder(Dictionary<string, List<(string Name, double Price)>> menu, string category, List<(string Name, int Quantity, double Price)> order)
+    static void PlaceOrder(List<FoodItem> items, List<OrderItem> order)
     {
-        Console.Clear();
-        Console.ForegroundColor = ConsoleColor.Cyan;
-        Console.WriteLine($"==== {category.ToUpper()} ====");
-        Console.ResetColor();
-
-        List<(string Name, double Price)> items = menu[category];
-        for (int i = 0; i < items.Count; i++)
+        while (true)
         {
-            Console.WriteLine($"{i + 1}. {items[i].Name} - ${items[i].Price:F2}");
-        }
+            Console.Clear();
+            PrintDivider();
+            PrintColoredText("Select Items", Settings.TitleColor);
+            PrintDivider();
 
-        Console.WriteLine("\nSelect an item by number, or type 'back' to return to the main menu:");
-        string input = Console.ReadLine();
-
-        if (input.ToLower() == "back")
-        {
-            return;
-        }
-
-        if (int.TryParse(input, out int selectedItem) && selectedItem > 0 && selectedItem <= items.Count)
-        {
-            var selectedItemData = items[selectedItem - 1];
-            Console.WriteLine($"\nHow many {selectedItemData.Name} would you like to order?");
-            string quantityInput = Console.ReadLine();
-
-            if (int.TryParse(quantityInput, out int quantity) && quantity > 0)
+            for (int i = 0; i < items.Count; i++)
             {
-                order.Add((selectedItemData.Name, quantity, selectedItemData.Price));
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"{quantity} x {selectedItemData.Name} added to your order!");
-                Console.ResetColor();
-                Thread.Sleep(1500);
+                PrintColoredText($"{i + 1}. {items[i].Name} - ${items[i].Price:F2}", Settings.DefaultColor);
+            }
+
+            PrintColoredText("\nChoose an item by number, or type 'back' to return:", Settings.DefaultColor);
+            string input = Console.ReadLine()?.ToLower();
+
+            if (input == "back") break;
+
+            if (int.TryParse(input, out int itemIndex) && IsValidIndex(itemIndex, items.Count))
+            {
+                var selectedItem = items[itemIndex - 1];
+                PrintColoredText($"How many {selectedItem.Name} would you like to order?", Settings.DefaultColor);
+                string quantityInput = Console.ReadLine();
+
+                if (int.TryParse(quantityInput, out int quantity) && quantity > 0)
+                {
+                    order.Add(new OrderItem(selectedItem.Name, quantity, selectedItem.Price));
+                    PrintColoredText($"{quantity} x {selectedItem.Name} added to your order!", Settings.SuccessColor);
+                    Thread.Sleep(Settings.Delay);
+                }
+                else
+                {
+                    PrintColoredText("Invalid quantity. Returning to the menu.", Settings.ErrorColor);
+                    Thread.Sleep(Settings.Delay);
+                }
             }
             else
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Invalid quantity. Returning to the menu.");
-                Console.ResetColor();
-                Thread.Sleep(1500);
+                PrintColoredText("Invalid selection. Please try again.", Settings.ErrorColor);
+                Thread.Sleep(Settings.Delay);
             }
-        }
-        else
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Invalid selection. Returning to the menu.");
-            Console.ResetColor();
-            Thread.Sleep(1500);
         }
     }
 
-    static void ShowOrderSummary(List<(string Name, int Quantity, double Price)> order)
+    static void ProcessCheckout(List<OrderItem> order)
     {
         Console.Clear();
-        Console.ForegroundColor = ConsoleColor.Magenta;
-        Console.WriteLine("========== ORDER SUMMARY ==========");
-        Console.ResetColor();
+        PrintDivider();
+        PrintColoredText("ORDER SUMMARY", Settings.TitleColor);
+        PrintDivider();
 
         if (order.Count == 0)
         {
-            Console.WriteLine("You have no items in your order.");
-            Console.WriteLine("Thank you for visiting Gourmet Delight!");
-            Thread.Sleep(2000);
+            PrintColoredText("No items in your order.", Settings.ErrorColor);
+            Thread.Sleep(Settings.Delay);
             return;
         }
 
-        double total = 0;
+        double subtotal = 0;
         foreach (var item in order)
         {
             double itemTotal = item.Quantity * item.Price;
-            total += itemTotal;
-            Console.WriteLine($"{item.Quantity} x {item.Name} - ${item.Price:F2} each (Total: ${itemTotal:F2})");
+            subtotal += itemTotal;
+            PrintColoredText($"{item.Quantity} x {item.Name} - ${item.Price:F2} each (Total: ${itemTotal:F2})", Settings.DefaultColor);
         }
 
-        Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine($"\nGrand Total: ${total:F2}");
-        Console.ResetColor();
+        double tax = subtotal * Settings.TaxRate;
+        double total = subtotal + tax;
 
-        Console.WriteLine("\nEnter payment amount:");
+        PrintColoredText($"\nSubtotal: ${subtotal:F2}", Settings.DefaultColor);
+        PrintColoredText($"Tax ({Settings.TaxRate * 100}%): ${tax:F2}", Settings.DefaultColor);
+        PrintColoredText($"Grand Total: ${total:F2}", Settings.SuccessColor);
+
+        PrintColoredText("\nEnter payment amount:", Settings.DefaultColor);
         string paymentInput = Console.ReadLine();
 
         if (double.TryParse(paymentInput, out double payment) && payment >= total)
         {
             double change = payment - total;
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"\nPayment successful! Your change is: ${change:F2}");
-            Console.WriteLine("Thank you for your order! Have a great day!");
-            Console.ResetColor();
+            PrintColoredText($"Payment successful! Your change: ${change:F2}", Settings.SuccessColor);
+            PrintColoredText("Thank you for your order! Have a great day!", Settings.SuccessColor);
         }
         else
         {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("\nPayment failed. Insufficient funds or invalid input.");
-            Console.ResetColor();
+            PrintColoredText("Payment failed. Insufficient funds or invalid input.", Settings.ErrorColor);
         }
 
-        Thread.Sleep(3000);
+        Thread.Sleep(Settings.Delay);
+    }
+
+    static bool IsValidIndex(int index, int count) => index > 0 && index <= count;
+
+    static void PrintColoredText(string text, ConsoleColor color)
+    {
+        Console.ForegroundColor = color;
+        Console.WriteLine(text);
+        Console.ResetColor();
+    }
+
+    static void PrintDivider()
+    {
+        Console.WriteLine(new string('=', 40));
+    }
+}
+
+class MenuSettings
+{
+    public string RestaurantName { get; } = "Ariel's Restaurant";
+    public ConsoleColor TitleColor { get; } = ConsoleColor.Cyan;
+    public ConsoleColor DefaultColor { get; } = ConsoleColor.White;
+    public ConsoleColor CategoryColor { get; } = ConsoleColor.Green;
+    public ConsoleColor SuccessColor { get; } = ConsoleColor.Yellow;
+    public ConsoleColor ErrorColor { get; } = ConsoleColor.Red;
+    public int Delay { get; } = 1000;
+    public double TaxRate { get; } = 0.07;
+
+    public Dictionary<string, List<FoodItem>> FoodMenu { get; } = new Dictionary<string, List<FoodItem>>()
+    {
+        { "Appetizers", new List<FoodItem> {
+            new FoodItem("Garlic Bread", 5.99),
+            new FoodItem("Bruschetta", 6.99),
+            new FoodItem("Spring Rolls", 7.99)
+        }},
+        { "Main Courses", new List<FoodItem> {
+            new FoodItem("Grilled Salmon", 15.99),
+            new FoodItem("Chicken Alfredo", 14.99),
+            new FoodItem("Vegetarian Lasagna", 13.99)
+        }},
+        { "Desserts", new List<FoodItem> {
+            new FoodItem("Cheesecake", 6.99),
+            new FoodItem("Chocolate Lava Cake", 7.99),
+            new FoodItem("Tiramisu", 8.99)
+        }},
+        { "Beverages", new List<FoodItem> {
+            new FoodItem("Iced Tea", 2.99),
+            new FoodItem("Cappuccino", 3.99),
+            new FoodItem("Fresh Lemonade", 2.49)
+        }}
+    };
+}
+
+class FoodItem
+{
+    public string Name { get; }
+    public double Price { get; }
+
+    public FoodItem(string name, double price)
+    {
+        Name = name;
+        Price = price;
+    }
+}
+
+class OrderItem
+{
+    public string Name { get; }
+    public int Quantity { get; }
+    public double Price { get; }
+
+    public OrderItem(string name, int quantity, double price)
+    {
+        Name = name;
+        Quantity = quantity;
+        Price = price;
     }
 }
