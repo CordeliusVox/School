@@ -34,6 +34,9 @@ class ArielRestaurantMenu
         {
             Console.Clear();
             PrintColoredText("========= FOOD MENU =========", Settings.TitleColor);
+
+            var categories = new List<string>(menu.Keys);
+
             DisplayCategories(menu);
 
             PrintColoredText("\nSelect a category by number, type 'checkout' to finish, or 'exit' to leave:", Settings.DefaultColor);
@@ -51,9 +54,9 @@ class ArielRestaurantMenu
                 break;
             }
 
-            if (int.TryParse(input, out int categoryIndex) && IsValidIndex(categoryIndex, menu.Count))
+            if (int.TryParse(input, out int categoryIndex) && IsValidIndex(categoryIndex, categories.Count))
             {
-                string category = menu.Keys[categoryIndex - 1];
+                string category = categories[categoryIndex - 1];
                 PlaceOrder(menu[category], order);
             }
             else
@@ -180,7 +183,7 @@ class ArielRestaurantMenu
     }
 }
 
-class MenuSettings
+class MenuSettings // The menu settings, Please do not change, if you do, return it back to what it was after u finish. Thank you :D
 {
     public string RestaurantName { get; } = "Ariel's Restaurant";
     public ConsoleColor TitleColor { get; } = ConsoleColor.Cyan;
@@ -241,3 +244,5 @@ class OrderItem
         Price = price;
     }
 }
+    // nice coding! we enjoyed our test run. in the end with "Insufficient funds" try making it in a while, because we stole your food without paying :-}
+    // ^ Thank you for the feedback! I will keep it in mind. ^
