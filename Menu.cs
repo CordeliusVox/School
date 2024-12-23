@@ -162,7 +162,7 @@ class ArielRestaurantMenu
         }
         else
         {
-            PrintColoredText("Payment failed. Insufficient funds or invalid input.", Settings.ErrorColor);
+            PrintColoredText("Payment failed. Insufficient funds or invalid input. Dont try to scam me >:(", Settings.ErrorColor);
         }
 
         Thread.Sleep(Settings.Delay);
@@ -185,19 +185,19 @@ class ArielRestaurantMenu
 
 class MenuSettings // The menu settings, Please do not change, if you do, return it back to what it was after u finish. Thank you :D
 {
-    public string RestaurantName { get; } = "Ariel's Restaurant";
-    public ConsoleColor TitleColor { get; } = ConsoleColor.Cyan;
+    public string RestaurantName { get; } = "Ariel's Restaurant"; // Main name of the Restaurant.
+    public ConsoleColor TitleColor { get; } = ConsoleColor.Cyan; // Pretty self explantory, the color of the title.
     public ConsoleColor DefaultColor { get; } = ConsoleColor.White;
-    public ConsoleColor CategoryColor { get; } = ConsoleColor.Green;
-    public ConsoleColor SuccessColor { get; } = ConsoleColor.Yellow;
+    public ConsoleColor CategoryColor { get; } = ConsoleColor.Yellow;
+    public ConsoleColor SuccessColor { get; } = ConsoleColor.Green;
     public ConsoleColor ErrorColor { get; } = ConsoleColor.Red;
-    public int Delay { get; } = 1000;
-    public double TaxRate { get; } = 0.07;
+    public int Delay { get; } = 1000; // Delay between actions. Default is 1000 (1s)
+    public double TaxRate { get; } = 0.07; // Tax rate. Default is 0.07 (7%)
 
     public Dictionary<string, List<FoodItem>> FoodMenu { get; } = new Dictionary<string, List<FoodItem>>()
     {
         { "Appetizers", new List<FoodItem> {
-            new FoodItem("Garlic Bread", 5.99),
+            new FoodItem("Garlic Bread", 5.99), // new FoodItem("FOOD NAME", FOOD PRICE),
             new FoodItem("Bruschetta", 6.99),
             new FoodItem("Spring Rolls", 7.99)
         }},
