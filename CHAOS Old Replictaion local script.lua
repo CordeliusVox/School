@@ -23,17 +23,17 @@ GETIMPORT		18		var4 = game -- [REDUNDANT]
 LOADK			20		var6 = "TweenService" -- [REDUNDANT]
 NAMECALL		21		var4 = var4:GetService(var6)
 GETTABLEKS		23		var5 = var3["OnClientEvent"] -- [REDUNDANT]
-DUPCLOSURE		25		upvalue[1_var0] = var0
-DUPCLOSURE		26		upvalue[2_var2] = var2
-DUPCLOSURE		27		upvalue[3_var4] = var4
-DUPCLOSURE		28		var7 = function(arg0, arg1, arg2) -- line: 8
-GETTABLEKS		0			var3 = arg2["Name"] -- [REDUNDANT]
+DUPCLOSURE		25		upvalue[1_var0] = var0 -- Local Player
+DUPCLOSURE		26		upvalue[2_var2] = var2 -- Revolver Bullet
+DUPCLOSURE		27		upvalue[3_var4] = var4 -- TweenService
+DUPCLOSURE		28		var7 = function(arg0 (Attachment), arg1 (EndPos), arg2(PLayerWhoFIred?)) -- RevolverReplicator.OnClientEvent:Connect(function(arg0, arg1, arg2)
+GETTABLEKS		0			var3 = arg2["Name"] -- arg2.Name
 GETUPVAL		2			var5 = upvalue[upvalue[1_var0]]
-GETTABLEKS		3			var4 = var5["Name"]
-JUMPIFEQ		5			if var3 ~= var4 then
+GETTABLEKS		3			var4 = var5["Name"] -- LocalPLayer.Name
+JUMPIFEQ		5			if var3 ~= var4 then -- If arg2.Name ~= Player.Name then
 LOADK			0				var5 = "Sound" -- [REDUNDANT]
-NAMECALL		1				var3 = arg0:FindFirstChild(var5)
-JUMPIFNOT		3				if var3 then
+NAMECALL		1				var3 = arg0:FindFirstChild(var5) -- Attachment.Sound
+JUMPIFNOT		3				if var3 then -- If Sound then do the same sound clone and play.
 GETTABLEKS		0					var3 = arg0["Sound"] -- [REDUNDANT]
 NAMECALL		2					var3 = var3:Clone()
 LOADK			4					var4 = "Uncopy" -- [REDUNDANT]
