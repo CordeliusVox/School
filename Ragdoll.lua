@@ -1,30 +1,6 @@
 local RagdollService = {}
 
-function RagdollService:RagdollCharacter(Character: Model, Enabled: boolean): ()
-	for _, Motor in pairs(Character:GetDescendants()) do
-		if Motor:IsA("Motor6D") then
-			local Part0 = Motor.Part0
-			local Part1 = Motor.Part1
-
-			if Part0 and Part1 then
-				local C0 = Motor.C0
-				local C1 = Motor.C1
-
-				Motor.Enabled = Enabled
-				self:CreateAttachments(Part0, Part1, C0, C1)
-				
-				local Humanoid: Humanoid = Character:FindFirstChildOfClass("Humanoid")
-				if Humanoid then
-					Humanoid.RequiresNeck = false
-					Humanoid.BreakJointsOnDeath = false
-					Humanoid:ChangeState(Enum.HumanoidStateType.Physics)
-				end
-			end
-		end
-	end
-end
-
-function RagdollService:CreateAttachments(Part0, Part1, C0, C1)
+local function CreateAttachments(Part0, Part1, C0, C1) 
 	local Attachment0 = Instance.new("Attachment")
 	Attachment0.CFrame = C0
 	Attachment0.Parent = Part0
@@ -41,6 +17,39 @@ function RagdollService:CreateAttachments(Part0, Part1, C0, C1)
 	-- Debug
 	Attachment0.Visible = true
 	Attachment1.Visible = true
+end
+
+function RagdollService:RagdollCharacter(Character: Model): ()
+	for _, Motor in pairs(Character:GetDescendants()) do
+		if Motor:IsA("Motor6D") then
+			local Part0 = Motor.Part0
+			local Part1 = Motor.Part1
+
+			if Part0 and Part1 then
+				local C0 = Motor.C0
+				local C1 = Motor.C1
+
+				Motor.Enabled = false
+				CreateAttachments(Part0, Part1, C0, C1)
+			end
+		end
+	end
+end
+
+function RagdollService:UnragdollCharacter(Character: Model): ()
+	for _, Descendant in pairs(Character:GetDescendants()) do
+		if Descendant:IsA("BallSocketConstraint") then
+			Descendant:Destroy()
+		end
+		
+		if Descendant:IsA("Attachment") and Descendant.Name == "Attachment" then
+			Descendant:Destroy()
+		end
+		
+		if Descendant:IsA("Motor6D") then
+			Descendant.Enabled = true
+		end
+	end
 end
 
 return RagdollService
