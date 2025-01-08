@@ -30,6 +30,10 @@ function RagdollService:CreateAttachments(Part0, Part1, C0, C1)
     BallSocketConstraint.Attachment0 = Attachment0
     BallSocketConstraint.Attachment1 = Attachment1
     BallSocketConstraint.Parent = Part0
+
+    -- Debug
+    Attachment0.Visible = true
+    Attachment1.Visible = true
 end
 
 return RagdollService
