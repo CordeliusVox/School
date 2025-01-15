@@ -1,124 +1,96 @@
-<Window x:Class="Checkers_Project_Ariel.MainWindow"
+<Window x:Class="Checkers.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Checkers_Project_Ariel"
+        xmlns:local="clr-namespace:Checkers"
         mc:Ignorable="d"
-        Title="Checkers Project Ariel" Height="800" MinHeight="800" MaxHeight="800" Width="800" MinWidth="800" MaxWidth="800" >
-    <Window.Resources>
-        <Style TargetType="Button">
-            <Setter Property="FontSize" Value="70"/>
-        </Style>
-        <Style TargetType="Label">
-            <Setter Property="FontSize" Value="20"/>
-            <Setter Property="FontFamily" Value="Georgia"/>
-            <Setter Property="FontWeight" Value="DemiBold"/>
+        Title="Checkers" 
+        WindowStyle="SingleBorderWindow"
+        MaxHeight="900" MinHeight="900" Height="900"
+        MaxWidth="1000" MinWidth="1000" Width="1000">
+    <Grid>
+        <!-- Background Image -->
+        <StackPanel>
+            <Image Source="/Images/Wooden Background.jpg" Stretch="Fill"/>
+        </StackPanel>
+        
+        <!-- Checkers Table -->
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="600" Height="600">
+            <UniformGrid Rows="8" Columns="8"  Background="BurlyWood">
+                <!-- Squares Grids -->
+                <Border Name="b1" Background="Black"/>
+                <Border/>
+                <Border Name="b2" Background="Black"/>
+                <Border/>
+                <Border Name="b3" Background="Black"/>
+                <Border/>
+                <Border Name="b4" Background="Black"/>
+                <Border/>
 
-        </Style>
+                <Border/>
+                <Border Name="b5" Background="Black"/>
+                <Border/>
+                <Border Name="b6" Background="Black"/>
+                <Border/>
+                <Border Name="b7" Background="Black"/>
+                <Border/>
+                <Border Name="b8" Background="Black"/>
 
-        <Style TargetType="TextBlock">
-            <Setter Property="FontSize" Value="20"/>
-            <Setter Property="FontFamily" Value="Georgia"/>
-            <Setter Property="FontWeight" Value="DemiBold"/>
+                <Border Name="b9" Background="Black"/>
+                <Border/>
+                <Border Name="b10" Background="Black"/>
+                <Border/>
+                <Border Name="b11" Background="Black"/>
+                <Border/>
+                <Border Name="b12" Background="Black"/>
+                <Border/>
 
-        </Style>
-        <LinearGradientBrush x:Key="WindowBackgroundBrush">
-            <GradientStop Offset="0" Color="White"/>
-            <GradientStop Offset=".5" Color="DarkGray"/>
-            <GradientStop Offset="1" Color="WhiteSmoke"/>
-        </LinearGradientBrush>
+                <Border/>
+                <Border Name="b13" Background="Black"/>
+                <Border/>
+                <Border Name="b14" Background="Black"/>
+                <Border/>
+                <Border Name="b15" Background="Black"/>
+                <Border/>
+                <Border Name="b16" Background="Black"/>
 
-        <LinearGradientBrush x:Key="side_grid_BackgroundBrush">
-            <GradientStop Offset="0" Color="White"/>
-            <GradientStop Offset=".5" Color="DarkGray"/>
-            <GradientStop Offset="1" Color="WhiteSmoke"/>
-        </LinearGradientBrush>
-    </Window.Resources>
-    <Grid x:Name="Container" Margin="0,0,32.6,0.4" Background="#DAA765">
-        <Grid x:Name ="Board" Margin="0,0,118,1" >
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
+                <Border Name="b17" Background="Black"/>
+                <Border/>
+                <Border Name="b18" Background="Black"/>
+                <Border/>
+                <Border Name="b19" Background="Black"/>
+                <Border/>
+                <Border Name="b20" Background="Black"/>
+                <Border/>
 
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+                <Border/>
+                <Border Name="b21" Background="Black"/>
+                <Border/>
+                <Border Name="b22" Background="Black"/>
+                <Border/>
+                <Border Name="b23" Background="Black"/>
+                <Border/>
+                <Border Name="b24" Background="Black"/>
 
-            <Button Click="Button_Click"  x:Name="b1" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="0" Grid.Row ="0" />
-            <Button  Click="Button_Click" x:Name="b2" Background ="#A06022" BorderBrush = "SlateGray" Grid.Column ="2" Grid.Row ="0"/>
-            <Button  Click="Button_Click" x:Name="b3" Background ="#A06022" BorderBrush = "SlateGray" Grid.Column ="4" Grid.Row ="0"/>
-            <Button  Click="Button_Click" x:Name="b4" Background ="#A06022" BorderBrush = "SlateGray" Grid.Column ="6" Grid.Row ="0"/>
+                <Border Name="b25" Background="Black"/>
+                <Border/>
+                <Border Name="b26" Background="Black"/>
+                <Border/>
+                <Border Name="b27" Background="Black"/>
+                <Border/>
+                <Border Name="b28" Background="Black"/>
+                <Border/>
 
-            <Button  Click="Button_Click" x:Name="b5" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="1" Grid.Row ="1"/>
-            <Button  Click="Button_Click" x:Name="b6" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="3" Grid.Row ="1"/>
-            <Button  Click="Button_Click" x:Name="b7" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="5" Grid.Row ="1"/>
-            <Button  Click="Button_Click" x:Name="b8" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="7" Grid.Row ="1"/>
-
-            <Button  Click="Button_Click" x:Name="b9" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="0" Grid.Row ="2"/>
-            <Button  Click="Button_Click" x:Name="b10" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="2" Grid.Row ="2"/>
-            <Button  Click="Button_Click" x:Name="b11" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="4" Grid.Row ="2"/>
-            <Button  Click="Button_Click" x:Name="b12" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="6" Grid.Row ="2"/>
-
-            <Button  Click="Button_Click" x:Name="b13" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="1" Grid.Row ="3"/>
-            <Button  Click="Button_Click" x:Name="b14" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="3" Grid.Row ="3"/>
-            <Button  Click="Button_Click" x:Name="b15" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="5" Grid.Row ="3"/>
-            <Button  Click="Button_Click" x:Name="b16" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="7" Grid.Row ="3"/>
-
-            <Button  Click="Button_Click" x:Name="b18" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="2" Grid.Row ="4"/>
-            <Button  Click="Button_Click" x:Name="b19" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="4" Grid.Row ="4"/>
-            <Button  Click="Button_Click" x:Name="b20" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="6" Grid.Row ="4"/>
-            <Button  Click="Button_Click" x:Name="b17" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="0" Grid.Row ="4"/>
-
-            <Button  Click="Button_Click" x:Name="b21" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="1" Grid.Row ="5"/>
-            <Button  Click="Button_Click" x:Name="b22" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="3" Grid.Row ="5"/>
-            <Button  Click="Button_Click" x:Name="b23" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="5" Grid.Row ="5"/>
-            <Button  Click="Button_Click" x:Name="b24" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="7" Grid.Row ="5"/>
-
-            <Button  Click="Button_Click" x:Name="b25" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="0" Grid.Row ="6"/>
-            <Button  Click="Button_Click" x:Name="b26" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="2" Grid.Row ="6"/>
-            <Button  Click="Button_Click" x:Name="b27" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="4" Grid.Row ="6"/>
-            <Button  Click="Button_Click" x:Name="b28" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="6" Grid.Row ="6"/>
-
-            <Button  Click="Button_Click" x:Name="b29" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="1" Grid.Row ="7"/>
-            <Button  Click="Button_Click" x:Name="b30" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="3" Grid.Row ="7"/>
-            <Button  Click="Button_Click" x:Name="b31" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="5" Grid.Row ="7"/>
-            <Button  Click="Button_Click" x:Name="b32" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="7" Grid.Row ="7"/>
+                <Border/>
+                <Border Name="b29" Background="Black"/>
+                <Border/>
+                <Border Name="b30" Background="Black"/>
+                <Border/>
+                <Border Name="b31" Background="Black"/>
+                <Border/>
+                <Border Name="b32" Background="Black"/>
+            </UniformGrid>
         </Grid>
-
-        <Grid x:Name="side_panel" Margin="643,0,-33,0" Background="#BB4430" >
-            <Label x:Name ="p1_checkers" Content="Player 2" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Height="40" Margin="0,81,-0.2,0" VerticalAlignment="Top" Width="151"  />
-            <Label x:Name ="p2_checkers" Content="Player 1" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Height="40" Margin="0,657,-0.2,0" VerticalAlignment="Top" Width="151" />
-
-
-            <TextBlock x:Name="current_player" TextWrapping="Wrap" TextAlignment="Center"  Height="100" Width="100" Margin="23,361,27.8,308.6">
-       Player _ turn
-            </TextBlock>
-
-            <TextBlock x:Name ="p2_identifier"  HorizontalAlignment="Left" Margin="27,147,0,557.6" TextWrapping="Wrap" Text="•" FontSize="70" TextAlignment="Center"  Width="96"/>
-            <TextBlock x:Name ="p1_identifier" HorizontalAlignment="Left"  Margin="27,536,0,153.6" TextWrapping="Wrap" Text="•" FontSize="70" TextAlignment="Center" Width="96"/>
-
-            <Border BorderBrush="#FFFF8B00" BorderThickness="5" HorizontalAlignment="Left" Height="750" Margin="10,10,0,0" VerticalAlignment="Top" Width="131">
-                <Border BorderBrush="#231F20" BorderThickness="3">
-
-
-                </Border>
-            </Border>
-        </Grid>
-
     </Grid>
 </Window>
