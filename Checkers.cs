@@ -1,11 +1,11 @@
-<Window x:Class="checkers_game.MainWindow"
+<Window x:Class="Checkers_Project_Ariel.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:checkers_game"
+        xmlns:local="clr-namespace:Checkers_Project_Ariel"
         mc:Ignorable="d"
-        Title="WPF Checkers" Height="800" MinHeight="800" MaxHeight="800" Width="800" MinWidth="800" MaxWidth="800" Background="{DynamicResource WindowBackgroundBrush}" Icon="WPFcheckerscover-PixTeller.ico" >
+        Title="Checkers Project Ariel" Height="800" MinHeight="800" MaxHeight="800" Width="800" MinWidth="800" MaxWidth="800" >
     <Window.Resources>
         <Style TargetType="Button">
             <Setter Property="FontSize" Value="70"/>
@@ -34,16 +34,9 @@
             <GradientStop Offset=".5" Color="DarkGray"/>
             <GradientStop Offset="1" Color="WhiteSmoke"/>
         </LinearGradientBrush>
-
-
-
-
     </Window.Resources>
-
-
-    <Grid x:Name="Container" Margin="0,0,32.6,0.4">
+    <Grid x:Name="Container" Margin="0,0,32.6,0.4" Background="#DAA765">
         <Grid x:Name ="Board" Margin="0,0,118,1" >
-
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -53,8 +46,6 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
-
-
 
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
@@ -68,61 +59,61 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <Button Click="Button_Click"  x:Name="b1" Background ="Black" BorderBrush ="SlateGray" Grid.Column ="0" Grid.Row ="0" />
-            <Button  Click="Button_Click" x:Name="b2" Background ="black" BorderBrush = "SlateGray" Grid.Column ="2" Grid.Row ="0"/>
-            <Button  Click="Button_Click" x:Name="b3" Background ="black" BorderBrush = "SlateGray" Grid.Column ="4" Grid.Row ="0"/>
-            <Button  Click="Button_Click" x:Name="b4" Background ="black" BorderBrush = "SlateGray" Grid.Column ="6" Grid.Row ="0"/>
+            <Button Click="Button_Click"  x:Name="b1" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="0" Grid.Row ="0" />
+            <Button  Click="Button_Click" x:Name="b2" Background ="#A06022" BorderBrush = "SlateGray" Grid.Column ="2" Grid.Row ="0"/>
+            <Button  Click="Button_Click" x:Name="b3" Background ="#A06022" BorderBrush = "SlateGray" Grid.Column ="4" Grid.Row ="0"/>
+            <Button  Click="Button_Click" x:Name="b4" Background ="#A06022" BorderBrush = "SlateGray" Grid.Column ="6" Grid.Row ="0"/>
 
-            <Button  Click="Button_Click" x:Name="b5" Background ="black" BorderBrush ="SlateGray" Grid.Column ="1" Grid.Row ="1"/>
-            <Button  Click="Button_Click" x:Name="b6" Background ="black" BorderBrush ="SlateGray" Grid.Column ="3" Grid.Row ="1"/>
-            <Button  Click="Button_Click" x:Name="b7" Background ="black" BorderBrush ="SlateGray" Grid.Column ="5" Grid.Row ="1"/>
-            <Button  Click="Button_Click" x:Name="b8" Background ="black" BorderBrush ="SlateGray" Grid.Column ="7" Grid.Row ="1"/>
+            <Button  Click="Button_Click" x:Name="b5" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="1" Grid.Row ="1"/>
+            <Button  Click="Button_Click" x:Name="b6" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="3" Grid.Row ="1"/>
+            <Button  Click="Button_Click" x:Name="b7" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="5" Grid.Row ="1"/>
+            <Button  Click="Button_Click" x:Name="b8" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="7" Grid.Row ="1"/>
 
-            <Button  Click="Button_Click" x:Name="b9" Background ="Black" BorderBrush ="SlateGray" Grid.Column ="0" Grid.Row ="2"/>
-            <Button  Click="Button_Click" x:Name="b10" Background ="black" BorderBrush ="SlateGray" Grid.Column ="2" Grid.Row ="2"/>
-            <Button  Click="Button_Click" x:Name="b11" Background ="black" BorderBrush ="SlateGray" Grid.Column ="4" Grid.Row ="2"/>
-            <Button  Click="Button_Click" x:Name="b12" Background ="black" BorderBrush ="SlateGray" Grid.Column ="6" Grid.Row ="2"/>
+            <Button  Click="Button_Click" x:Name="b9" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="0" Grid.Row ="2"/>
+            <Button  Click="Button_Click" x:Name="b10" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="2" Grid.Row ="2"/>
+            <Button  Click="Button_Click" x:Name="b11" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="4" Grid.Row ="2"/>
+            <Button  Click="Button_Click" x:Name="b12" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="6" Grid.Row ="2"/>
 
-            <Button  Click="Button_Click" x:Name="b13" Background ="black" BorderBrush ="SlateGray" Grid.Column ="1" Grid.Row ="3"/>
-            <Button  Click="Button_Click" x:Name="b14" Background ="black" BorderBrush ="SlateGray" Grid.Column ="3" Grid.Row ="3"/>
-            <Button  Click="Button_Click" x:Name="b15" Background ="black" BorderBrush ="SlateGray" Grid.Column ="5" Grid.Row ="3"/>
-            <Button  Click="Button_Click" x:Name="b16" Background ="black" BorderBrush ="SlateGray" Grid.Column ="7" Grid.Row ="3"/>
+            <Button  Click="Button_Click" x:Name="b13" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="1" Grid.Row ="3"/>
+            <Button  Click="Button_Click" x:Name="b14" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="3" Grid.Row ="3"/>
+            <Button  Click="Button_Click" x:Name="b15" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="5" Grid.Row ="3"/>
+            <Button  Click="Button_Click" x:Name="b16" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="7" Grid.Row ="3"/>
 
-            <Button  Click="Button_Click" x:Name="b18" Background ="black" BorderBrush ="SlateGray" Grid.Column ="2" Grid.Row ="4"/>
-            <Button  Click="Button_Click" x:Name="b19" Background ="black" BorderBrush ="SlateGray" Grid.Column ="4" Grid.Row ="4"/>
-            <Button  Click="Button_Click" x:Name="b20" Background ="black" BorderBrush ="SlateGray" Grid.Column ="6" Grid.Row ="4"/>
-            <Button  Click="Button_Click" x:Name="b17" Background ="black" BorderBrush ="SlateGray" Grid.Column ="0" Grid.Row ="4"/>
+            <Button  Click="Button_Click" x:Name="b18" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="2" Grid.Row ="4"/>
+            <Button  Click="Button_Click" x:Name="b19" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="4" Grid.Row ="4"/>
+            <Button  Click="Button_Click" x:Name="b20" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="6" Grid.Row ="4"/>
+            <Button  Click="Button_Click" x:Name="b17" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="0" Grid.Row ="4"/>
 
-            <Button  Click="Button_Click" x:Name="b21" Background ="black" BorderBrush ="SlateGray" Grid.Column ="1" Grid.Row ="5"/>
-            <Button  Click="Button_Click" x:Name="b22" Background ="black" BorderBrush ="SlateGray" Grid.Column ="3" Grid.Row ="5"/>
-            <Button  Click="Button_Click" x:Name="b23" Background ="black" BorderBrush ="SlateGray" Grid.Column ="5" Grid.Row ="5"/>
-            <Button  Click="Button_Click" x:Name="b24" Background ="black" BorderBrush ="SlateGray" Grid.Column ="7" Grid.Row ="5"/>
+            <Button  Click="Button_Click" x:Name="b21" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="1" Grid.Row ="5"/>
+            <Button  Click="Button_Click" x:Name="b22" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="3" Grid.Row ="5"/>
+            <Button  Click="Button_Click" x:Name="b23" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="5" Grid.Row ="5"/>
+            <Button  Click="Button_Click" x:Name="b24" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="7" Grid.Row ="5"/>
 
-            <Button  Click="Button_Click" x:Name="b25" Background ="black" BorderBrush ="SlateGray" Grid.Column ="0" Grid.Row ="6"/>
-            <Button  Click="Button_Click" x:Name="b26" Background ="black" BorderBrush ="SlateGray" Grid.Column ="2" Grid.Row ="6"/>
-            <Button  Click="Button_Click" x:Name="b27" Background ="black" BorderBrush ="SlateGray" Grid.Column ="4" Grid.Row ="6"/>
-            <Button  Click="Button_Click" x:Name="b28" Background ="black" BorderBrush ="SlateGray" Grid.Column ="6" Grid.Row ="6"/>
+            <Button  Click="Button_Click" x:Name="b25" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="0" Grid.Row ="6"/>
+            <Button  Click="Button_Click" x:Name="b26" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="2" Grid.Row ="6"/>
+            <Button  Click="Button_Click" x:Name="b27" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="4" Grid.Row ="6"/>
+            <Button  Click="Button_Click" x:Name="b28" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="6" Grid.Row ="6"/>
 
-            <Button  Click="Button_Click" x:Name="b29" Background ="black" BorderBrush ="SlateGray" Grid.Column ="1" Grid.Row ="7"/>
-            <Button  Click="Button_Click" x:Name="b30" Background ="black" BorderBrush ="SlateGray" Grid.Column ="3" Grid.Row ="7"/>
-            <Button  Click="Button_Click" x:Name="b31" Background ="black" BorderBrush ="SlateGray" Grid.Column ="5" Grid.Row ="7"/>
-            <Button  Click="Button_Click" x:Name="b32" Background ="black" BorderBrush ="SlateGray" Grid.Column ="7" Grid.Row ="7"/>
+            <Button  Click="Button_Click" x:Name="b29" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="1" Grid.Row ="7"/>
+            <Button  Click="Button_Click" x:Name="b30" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="3" Grid.Row ="7"/>
+            <Button  Click="Button_Click" x:Name="b31" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="5" Grid.Row ="7"/>
+            <Button  Click="Button_Click" x:Name="b32" Background ="#A06022" BorderBrush ="SlateGray" Grid.Column ="7" Grid.Row ="7"/>
         </Grid>
 
-        <Grid x:Name="side_panel" Margin="643,0,-33,0" Background="{DynamicResource side_grid_BackgroundBrush}" >
+        <Grid x:Name="side_panel" Margin="643,0,-33,0" Background="#BB4430" >
             <Label x:Name ="p1_checkers" Content="Player 2" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Height="40" Margin="0,81,-0.2,0" VerticalAlignment="Top" Width="151"  />
             <Label x:Name ="p2_checkers" Content="Player 1" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Height="40" Margin="0,657,-0.2,0" VerticalAlignment="Top" Width="151" />
 
 
             <TextBlock x:Name="current_player" TextWrapping="Wrap" TextAlignment="Center"  Height="100" Width="100" Margin="23,361,27.8,308.6">
-       Player 1 turn
+       Player _ turn
             </TextBlock>
 
             <TextBlock x:Name ="p2_identifier"  HorizontalAlignment="Left" Margin="27,147,0,557.6" TextWrapping="Wrap" Text="•" FontSize="70" TextAlignment="Center"  Width="96"/>
             <TextBlock x:Name ="p1_identifier" HorizontalAlignment="Left"  Margin="27,536,0,153.6" TextWrapping="Wrap" Text="•" FontSize="70" TextAlignment="Center" Width="96"/>
 
-            <Border BorderBrush="DarkGray" BorderThickness="5" HorizontalAlignment="Left" Height="750" Margin="10,10,0,0" VerticalAlignment="Top" Width="131">
-                <Border BorderBrush="Black" BorderThickness="3">
+            <Border BorderBrush="#FFFF8B00" BorderThickness="5" HorizontalAlignment="Left" Height="750" Margin="10,10,0,0" VerticalAlignment="Top" Width="131">
+                <Border BorderBrush="#231F20" BorderThickness="3">
 
 
                 </Border>
