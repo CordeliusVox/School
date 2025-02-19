@@ -1,272 +1,345 @@
---[[
-        Advanced Aurora Borealis System.
-        This script creates a dynamic aurora effect using neon parts, sine wave motion, dynamic lighting, and particle emitters.
-        
-        Made by @CordeliusVox
-        Date: 14/02/2025
-]]--
+using System;
+using System.Threading;
 
---// Services
-local UserInputService = game:GetService("UserInputService")
-local TweenService = game:GetService("TweenService")
-local RunService = game:GetService("RunService")
-local Lighting = game:GetService("Lighting")
+// Hello teacher, just for a little note. I did this in 2 days so it might not be the best. I have used strings for a couple of actions in here,
+// But I promise you I could make it with numbers. Theres a 5 second delay between each action to ensure readability. (You could change this in the threads sleeps.)
 
---[[
-        Advanced Logger Function simply for debugging purposes.
-        Provides detailed logging with time stamps and log levels.
-]]--
-local function AdvancedLogger(Message, Level)
-        Level = Level or "INFO"
-        print("[" .. Level .. "][" .. os.date("%X") .. "]: " .. Message)
-end
+namespace Project_Class
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // Entry point of the program
+            RunProgram();
+        }
 
---[[
-        AuroraBand Class Definition:
-        This class represents a single band of the aurora. Each band is composed of multiple segments that wave in the sky.
-]]--
-local AuroraBand = {}
-AuroraBand.__index = AuroraBand
+        static void RunProgram() // Main loop that runs the program. Handles menu display, user input, and program flow.
+        {
+            int errors = 0; // Keeps track of invalid menu attempts
+            int input; // Stores user menu selection
 
---[[
-    AuroraBand.new(Origin, Length, SegmentCount, Amplitude, Frequency, BaseColor, FadeColor)
-    
-    Creates a new AuroraBand instance.
-    
-    Parameters:
-      Origin (Vector3): The starting point of the aurora band in the world.
-      Length (number): The horizontal length over which segments are distributed.
-      SegmentCount (number): Number of segments to divide the band into.
-      Amplitude (number): Maximum vertical displacement for the sine wave motion.
-      Frequency (number): Speed factor for the sine wave oscillation.
-      BaseColor (Color3): The starting color for the aurora gradient.
-      FadeColor (Color3): The ending color for the aurora gradient.
-      
-    Returns:
-      AuroraBand instance with its own segments, dynamic lights, and particle emitters.
-]]
-function AuroraBand.new(Origin, Length, SegmentCount, Amplitude, Frequency, BaseColor, FadeColor)
-        local self = setmetatable({}, AuroraBand)
+            do
+            {
+                Console.Clear(); // Clear the console for better readability
+                input = DisplayMenu(); // Display the menu and get user input
+                ProcessMenuChoice(ref errors, input); // Process the user's menu choice
+            } while (errors < 3 && input != 1); // Exit if too many errors or user chooses to exit
 
-        -- Store the configuration values for later use during updates.
-        self.Origin = Origin or Vector3.new(0, 100, 0)
-        self.Length = Length or 200
-        self.SegmentCount = SegmentCount or 20
-        self.Amplitude = Amplitude or 20
-        self.Frequency = Frequency or 1
-        self.BaseColor = BaseColor or Color3.fromRGB(0, 255, 150)
-        self.FadeColor = FadeColor or Color3.fromRGB(50, 100, 255)
-        self.Segments = {}  -- Will hold each segment's data (part and light reference)
+            // Display appropriate exit message
+            if (errors == 3)
+            {
+                DisplayMessage("Too many invalid attempts. Exiting the program.", ConsoleColor.Red);
+            }
+            else
+            {
+                DisplayMessage("Exiting the program. Goodbye!", ConsoleColor.Green);
+            }
+        }
 
-        -- Create a folder in the workspace to keep all segments of this band organized.
-        self.Folder = Instance.new("Folder")
-        self.Folder.Name = "AuroraBand"
-        self.Folder.Parent = workspace
+        static int DisplayMenu() // Displays the main menu to the user and prompts for input. -> Returns user's menu choice as an integer.
+        {
+            DisplayMessage("\n===== Main Menu =====", ConsoleColor.Cyan);
+            Console.WriteLine("1. End the program");
+            Console.WriteLine("2. Reverse numbers");
+            Console.WriteLine("3. Amicable numbers");
+            Console.WriteLine("4. Special numbers");
+            Console.WriteLine("5. Rectangle");
+            DisplayMessage("Please enter your choice: ", ConsoleColor.Yellow);
 
-        -- Create the segments that form the visual band.
-        for i = 0, self.SegmentCount - 1 do
-                -- Determine normalized position (t) along the band (0 at start, 1 at end)
-                local t = i / (self.SegmentCount - 1)
-                -- Compute the base position for this segment along the horizontal length.
-                local Position = self.Origin + Vector3.new(self.Length * t, 0, 0)
+            return ParseIntInput(); // Parse and return the user's input
+        }
 
-                -- Create a neon part for the visual segment.
-                local Segment = Instance.new("Part")
-                Segment.Name = "AuroraSegment"
-                Segment.Size = Vector3.new(self.Length / self.SegmentCount, 2, 20) -- Thin, wide segment
-                Segment.Anchored = true -- We control it's position manually, it should not be affected by physics.
-                Segment.CanCollide = false -- There is no need for collision for visual parts.
-                Segment.CastShadow = false -- There is no need for shadows.
-                Segment.Material = Enum.Material.Neon
-                Segment.Transparency = 0.3 -- Partially transparent to blend with the sky.
-                Segment.CFrame = CFrame.new(Position) -- Set initial position.
-                Segment.Parent = self.Folder -- Parent it to our band folder for organization.
+        static void ProcessMenuChoice(ref int Errors, int Choice) // Processes the user's menu choice and directs to the appropriate action.
+        {
+            Console.Clear(); // Clear the console before performing an action
+            switch (Choice)
+            {
+                case 1: // Exit the program
+                    break;
+                case 2: // Reverse numbers
+                    ReverseNumbers();
+                    break;
+                case 3: // Find amicable numbers
+                    AmicableNumbers();
+                    break;
+                case 4: // Find special numbers
+                    SpecialNumbers();
+                    break;
+                case 5: // Draw a rectangle
+                    DrawRectangle();
+                    break;
+                default:
+                    Errors++; // Increment error count for invalid choice
+                    DisplayMessage($"Invalid choice! You have {3 - Errors} attempts left.", ConsoleColor.Red);
+                    Thread.Sleep(2000); // Pause to let the user read the error message
+                    break;
+            }
+        }
 
-                -- Set the segment's color based on a gradient between BaseColor and FadeColor.
-                local SegmentColor = self.BaseColor:Lerp(self.FadeColor, t)
-                Segment.Color = SegmentColor
+        static void DisplayMessage(string Message, ConsoleColor Color) // Displays a message in a specific color.
+        {
+            Console.ForegroundColor = Color; // Set text color
+            Console.WriteLine(Message); // Print the message
+            Console.ResetColor(); // Reset to default console color
+        }
 
-                -- Attach a PointLight to the segment for dynamic lighting.
-                local _Light = Instance.new("PointLight")
-                _Light.Color = SegmentColor
-                _Light.Range = 30
-                _Light.Brightness = 2
-                _Light.Parent = Segment
+        static int ParseIntInput() // Parses user input as an int, ensuring it is valid. -> Returns valid integer input from the user.
+        {
+            while (true)
+            {
+                string Input = Console.ReadLine(); // Read user input
+                if (int.TryParse(Input, out int result)) // Check if input is a valid integer
+                {
+                    return result; // Return the valid integer
+                }
+                DisplayMessage("Invalid input. Please enter a valid number:", ConsoleColor.Red);
+            }
+        }
 
-                -- Attach a ParticleEmitter to create subtle particle effects. (Change these if you know what you're doing.)
-                local Emitter = Instance.new("ParticleEmitter", Segment)
-                Emitter.Texture = "rbxassetid://243098098"  -- Change this to your preferred texture asset.
-                Emitter.Rate = 20
-                Emitter.Lifetime = NumberRange.new(2, 3)
-                Emitter.Speed = NumberRange.new(1, 3)
-                Emitter.VelocitySpread = 180
-                Emitter.LightInfluence = 1
-                Emitter.Size = NumberSequence.new({NumberSequenceKeypoint.new(0, 2), NumberSequenceKeypoint.new(1, 0)})
+        static void ReverseNumbers() // Reverses a number in segments specified by the user.
+        {
+            DisplayMessage("Enter a number to reverse: ", ConsoleColor.Yellow);
+            int Number = ParseIntInput();
 
-                -- Save the segment's part and its light in our segments table.
-                table.insert(self.Segments, {Part = Segment, Light = _Light})
-        end
+            DisplayMessage("Enter the digit group size to reverse by: ", ConsoleColor.Yellow);
+            int GroupSize = ParseIntInput();
 
-        return self
-end
+            if (GroupSize > 0)
+            {
+                int Reversed = ReverseByParts(Number, GroupSize); // Reverse the number in groups
+                DisplayMessage($"Reversed number: {Reversed}", ConsoleColor.Green);
+            }
+            else
+            {
+                DisplayMessage("Invalid input for group size. Must be greater than 0.", ConsoleColor.Red);
+            }
+            Thread.Sleep(5000); // Pause to let the user read the result
+        }
 
---[[
-    AuroraBand:Update(DeltaTime, Time)
-    
-    Updates the position and color of each segment in the band to create a dynamic,
-    wavy aurora effect. The update is based on sine and cosine functions to simulate natural motion.
-    
-    Parameters:
-      DeltaTime (number): Delta time since the last update.
-      Time (number): The elapsed time, used to drive the wave motion.
-]]
-function AuroraBand:Update(DeltaTime, Time)
-        for i, SegmentData in ipairs(self.Segments) do
-                local Part = SegmentData.Part
-                local Light = SegmentData.Light
+        static int ReverseByParts(int Number, int Digit) // Reverses the digits of a number in groups of a specified size. -> Returns the reversed number.
+        {
+            int Reversed = 0; // Resulting reversed number
+            int Multi = 1; // Multiplier for positioning digits
 
-                -- Find the position of the segment along the band.
-                local t = (i - 1) / (self.SegmentCount - 1)
-                -- Calculate vertical offset using a sine wave for smooth motion.
-                local Wave = math.sin(Time * self.Frequency + t * math.pi * 2) * self.Amplitude
-                -- Calculate a "slight" horizontal sway using cos, this adds complexity to the motion.
-                local Sway = math.cos(Time * self.Frequency * 0.5 + t * math.pi) * 5
-                -- The base position is calculated from the origin and the horizontal distribution.
-                local BasePosition = self.Origin + Vector3.new(self.Length * t, 0, 0)
-                -- Add the wave and sway to the base position to obtain the new target position.
-                local NewPosition = BasePosition + Vector3.new(0, Wave, Sway)
+            while (Number > 0)
+            {
+                int Part = Number % (int)Math.Pow(10, Digit); // Extract group of digits
+                Number /= (int)Math.Pow(10, Digit); // Remove extracted digits from the number
 
-                -- Smoothly transition the segment's position for visual stuff.
-                -- Lerp between the current CFrame and the new target position.
-                Part.CFrame = Part.CFrame:Lerp(CFrame.new(NewPosition) * CFrame.Angles(0, math.rad(90), 0), DeltaTime * 5)
+                int ReversedPart = 0;
+                while (Part > 0) // Reverse the extracted group of digits
+                {
+                    ReversedPart = ReversedPart * 10 + Part % 10;
+                    Part /= 10;
+                }
 
-                -- Compute a shifting factor for the color change based on time and segment position.
-                local ColorShift = 0.5 + 0.5 * math.sin(Time + t * math.pi * 2)
-                -- Interpolate the segment color between BaseColor and FadeColor.
-                local NewColor = self.BaseColor:Lerp(self.FadeColor, ColorShift)
-                Part.Color = NewColor
-                Light.Color = NewColor -- Update the point light to match the segment's color.
-        end
-end
+                Reversed += ReversedPart * Multi; // Add reversed group to the result
+                Multi *= (int)Math.Pow(10, Digit); // Update multiplier for the next group
+            }
 
---[[
-        AuroraManager Class Definition:
-        This class manages multiple AuroraBand instances to create a richer aurora display.
-]]--
-local AuroraManager = {}
-AuroraManager.__index = AuroraManager
+            return Reversed; // Return the fully reversed number
+        }
 
---[[
-    AuroraManager.new()
-    
-    Initializes the AuroraManager which creates several AuroraBand instances,
-    each with different parameters to produce a layered and varied aurora effect.
-    
-    Returns:
-      AuroraManager instance containing a list of bands.
-]]
-function AuroraManager.new()
-        local self = setmetatable({}, AuroraManager)
+        static void AmicableNumbers() // Finds and displays amicable pairs near a given number.
+        {
+            DisplayMessage("Enter a number between 3 and 10,000: ", ConsoleColor.Yellow);
+            int Number = ParseIntInput();
 
-        self.Bands = {}  -- Table to hold all created AuroraBand objects.
+            if (Number < 3 || Number > 10000)
+            {
+                DisplayMessage("Invalid input. Please enter a number in the range of 3 - 10,000.", ConsoleColor.Red);
+                return;
+            }
 
-        -- Create a folder in workspace for the overall aurora system.
-        self.Folder = Instance.new("Folder")
-        self.Folder.Name = "AuroraManager"
-        self.Folder.Parent = workspace
+            DisplayMessage("The 4 closest amicable pairs above the number are: ", ConsoleColor.Cyan);
+            FindAmicablePairs(Number, 4); // Find and display amicable pairs
+            Thread.Sleep(5000); // Pause for user to read results
+        }
 
-        -- Create multiple AuroraBands with different configurations. (Can add ad many as u want)
-        table.insert(self.Bands, AuroraBand.new(Vector3.new(-80, 110, -60), 320, 26, 14, 1.3, Color3.fromRGB(0, 255, 200), Color3.fromRGB(100, 50, 255)))
-        table.insert(self.Bands, AuroraBand.new(Vector3.new(-40, 135, 30), 280, 22, 12, 1.1, Color3.fromRGB(50, 255, 180), Color3.fromRGB(90, 40, 240)))
-        table.insert(self.Bands, AuroraBand.new(Vector3.new(60, 120, -90), 350, 30, 10, 1.5, Color3.fromRGB(0, 255, 180), Color3.fromRGB(80, 20, 255)))
-        table.insert(self.Bands, AuroraBand.new(Vector3.new(-100, 145, 70), 270, 24, 18, 1.0, Color3.fromRGB(20, 255, 220), Color3.fromRGB(110, 30, 230)))
-        table.insert(self.Bands, AuroraBand.new(Vector3.new(50, 150, -50), 310, 27, 17, 1.25, Color3.fromRGB(10, 245, 200), Color3.fromRGB(140, 50, 255)))
-        table.insert(self.Bands, AuroraBand.new(Vector3.new(-70, 140, 20), 360, 32, 13, 1.6, Color3.fromRGB(0, 255, 190), Color3.fromRGB(70, 20, 250)))
-        table.insert(self.Bands, AuroraBand.new(Vector3.new(20, 160, -10), 290, 23, 19, 1.05, Color3.fromRGB(5, 255, 210), Color3.fromRGB(100, 35, 240)))
-        table.insert(self.Bands, AuroraBand.new(Vector3.new(-30, 125, 90), 280, 21, 13, 1.1, Color3.fromRGB(0, 220, 210), Color3.fromRGB(90, 30, 240)))
-        table.insert(self.Bands, AuroraBand.new(Vector3.new(90, 135, -70), 260, 19, 15, 0.9, Color3.fromRGB(10, 240, 190), Color3.fromRGB(110, 25, 230)))
-        table.insert(self.Bands, AuroraBand.new(Vector3.new(-50, 130, -30), 300, 25, 12, 1.3, Color3.fromRGB(0, 235, 205), Color3.fromRGB(80, 20, 255)))
-        table.insert(self.Bands, AuroraBand.new(Vector3.new(30, 145, 40), 330, 28, 14, 1.4, Color3.fromRGB(0, 250, 180), Color3.fromRGB(130, 40, 255)))
-        table.insert(self.Bands, AuroraBand.new(Vector3.new(-90, 120, 10), 290, 22, 11, 1.2, Color3.fromRGB(5, 255, 190), Color3.fromRGB(95, 35, 250)))
-        table.insert(self.Bands, AuroraBand.new(Vector3.new(10, 150, -80), 340, 28, 16, 1.4, Color3.fromRGB(0, 230, 255), Color3.fromRGB(130, 60, 255)))
-        table.insert(self.Bands, AuroraBand.new(Vector3.new(-60, 155, 50), 250, 20, 20, 0.8, Color3.fromRGB(0, 200, 255), Color3.fromRGB(150, 0, 255)))
-        table.insert(self.Bands, AuroraBand.new(Vector3.new(70, 125, -40), 320, 26, 14, 1.3, Color3.fromRGB(0, 180, 255), Color3.fromRGB(120, 10, 250)))
+        static void FindAmicablePairs(int start, int count) // Finds and prints a specified number of amicable pairs starting from a given number.
+        {
+            int PairsFound = 0; // Tracks the number of pairs found
+            int CurrentNumber = start + 1; // Start search from the next number
 
-        return self
-end
+            while (PairsFound < count)
+            {
+                int Sum1 = SumOfDivisors(CurrentNumber);
 
---[[
-    AuroraManager:Update(DeltaTime, Time)
-    
-    Calls the update function for each AuroraBand managed by the AuroraManager.
-    This maintains the update logic for all aurora bands.
-    
-    Parameters:
-      DeltaTime (number): Delta time since the last update.
-      time (number): Passed time used to drive the dynamic motion.
-]]
-function AuroraManager:Update(DeltaTime, Time)
-        for _, Band in ipairs(self.Bands) do
-                Band:Update(DeltaTime, Time)
-        end
-end
+                if (Sum1 > CurrentNumber) // Avoid duplicates by ensuring sum1 > currentNumber
+                {
+                    int Sum2 = SumOfDivisors(Sum1);
 
---[[
-        Sky and Lighting Enhancement Function
-        This function dynamically adjusts the sky's ambient colors based on the aurora's mood.
-]]--
-local function UpdateSkyColor(Time)
-        -- Define two base ambient colors: one for a darker, night like mood and one slightly brighter.
-        local DayColor = Color3.fromRGB(20, 20, 60)
-        local NightColor = Color3.fromRGB(5, 5, 20)
-        -- Use a sine wave to smoothly transition between these two colors over time.
-        local Factor = 0.5 + 0.5 * math.sin(Time * 0.1)
-        -- Lerp between dayColor and nightColor to get the current ambient color.
-        Lighting.Ambient = DayColor:Lerp(NightColor, Factor)
-        Lighting.OutdoorAmbient = Lighting.Ambient -- Apply the same color to outdoor ambient lighting.
-end
+                    if (Sum2 == CurrentNumber && Sum1 != CurrentNumber)
+                    {
+                        DisplayMessage($"({CurrentNumber}, {Sum1})", ConsoleColor.Green);
+                        PairsFound++; // Increment count of pairs found
+                    }
+                }
+                CurrentNumber++; // Check the next number
+            }
 
---// Main script setup and loop.
+            if (PairsFound == 0)
+            {
+                DisplayMessage("No amicable pairs found.", ConsoleColor.Red);
+            }
+        }
 
--- Create the AuroraManager instance which spawns several aurora bands.
-local _AuroraManager = AuroraManager.new()
+        static int SumOfDivisors(int Number) // Computes the sum of divisors of a number. -> Returns sum of divisors
+        {
+            int Sum = 1; // 1 is a divisor for all numbers
 
--- Store the start time for the update calculations.
-local StartTime = tick()
+            for (int i = 2; i <= Math.Sqrt(Number); i++)
+            {
+                if (Number % i == 0) // Check if 'i' is a divisor
+                {
+                    Sum += i;
 
--- Main update loop using RunService.Heartbeat for per frame updates.
-RunService.Heartbeat:Connect(function(DeltaTime)
-        local CurrentTime = tick() - StartTime -- Calculate passed time.
-        -- Update all aurora bands based on delta time and passed time.
-        _AuroraManager:Update(DeltaTime, CurrentTime)
-        -- Update the sky ambient colors to somewhat enhance the aurora mood.
-        UpdateSkyColor(CurrentTime)
-end)
+                    if (i != Number / i) // Add the complementary divisor
+                    {
+                        Sum += Number / i;
+                    }
+                }
+            }
 
-AdvancedLogger("Advanced Aurora Borealis System Initialized", "DEBUG")
+            return Sum; // Return the sum of divisors
+        }
 
---[[
-        Interactive Feature: Toggle Aurora Visibility
-        Pressing the 'T' key toggles the transparency and light enabled state for all segments.
-]]--
-local AuroraVisible = true  -- Initial visibility state
+        static void SpecialNumbers() // Finds the closest prime numbers, Germain primes, and palindromes to the given number.
+        {
+            DisplayMessage("Enter a number between 7 and 8000: ", ConsoleColor.Yellow);
+            int Number = GetValidInput(7, 8000); // Ensure the number is valid within the given range
 
--- Listen for key press events using UserInputService.
-UserInputService.InputBegan:Connect(function(Input, GameProcessed)
-        if GameProcessed then -- Ignore if the game already processed the input.
-                return 
-        end
+            Console.Clear();
+            DisplayMessage("\nFinding closest numbers...\n", ConsoleColor.Cyan);
 
-        if Input.KeyCode == Enum.KeyCode.T then
-                AuroraVisible = not AuroraVisible  -- Toggle the visibility flag.
-                -- Loop through all aurora bands and their segments to update transparency and lighting.
-                for _, Band in ipairs(_AuroraManager.Bands) do
-                        for _, SegmentData in ipairs(Band.Segments) do
-                                -- When invisible, set transparency to full (1) and disable light.
-                                SegmentData.Part.Transparency = AuroraVisible and 0.3 or 1
-                                SegmentData.Light.Enabled = AuroraVisible
-                        end
-    end
-                AdvancedLogger("Aurora visibility toggled: " .. tostring(AuroraVisible), "INFO")
-        end
-end)
+            // Variables to store the results
+            int LowerPrime = -1, UpperPrime = -1;
+            int LowerGermain = -1, UpperGermain = -1;
+            int LowerPalindrome = -1, UpperPalindrome = -1;
+
+            // Iterate to find the closest numbers for each condition
+            for (int i = 0; LowerPrime == -1 || UpperPrime == -1 || LowerGermain == -1 || UpperGermain == -1 || LowerPalindrome == -1 || UpperPalindrome == -1; i++)
+            {
+                // Check for primes
+                if (LowerPrime == -1 && IsPrime(Number - i)) LowerPrime = Number - i;
+                if (UpperPrime == -1 && IsPrime(Number + i)) UpperPrime = Number + i;
+
+                // Check for Germain primes
+                if (LowerGermain == -1 && IsPrime(Number - i) && IsPrime(2 * (Number - i) + 1)) LowerGermain = Number - i;
+                if (UpperGermain == -1 && IsPrime(Number + i) && IsPrime(2 * (Number + i) + 1)) UpperGermain = Number + i;
+
+                // Check for palindromes
+                if (LowerPalindrome == -1 && IsPalindrome(Number - i)) LowerPalindrome = Number - i;
+                if (UpperPalindrome == -1 && IsPalindrome(Number + i)) UpperPalindrome = Number + i;
+            }
+
+            // Display results
+            DisplayMessage($"1) Closest prime numbers: Lower = {LowerPrime}, Upper = {UpperPrime}", ConsoleColor.Green);
+            DisplayMessage($"2) Closest Germain primes: Lower = {LowerGermain}, Upper = {UpperGermain}", ConsoleColor.Green);
+            DisplayMessage($"3) Closest palindromes: Lower = {LowerPalindrome}, Upper = {UpperPalindrome}\n", ConsoleColor.Green);
+
+            Thread.Sleep(5000); // Small delay for user readability
+        }
+
+        static bool IsPrime(int Number) // Checks if a number is a prime. -> Returns True if the number is prime. Otherwise, false.
+        {
+            if (Number < 2) return false;
+            for (int i = 2; i <= Math.Sqrt(Number); i++)
+            {
+                if (Number % i == 0)
+                    return false;
+            }
+            return true;
+        }
+
+        static bool IsPalindrome(int Number) // Checks if a number is a palindrome. -> Returns True if the number is a palindrome. Otherwise, false.
+        {
+            // I know I used a cheeky way using strings :(
+            string String = Number.ToString();
+            for (int i = 0, j = String.Length - 1; i < j; i++, j--)
+            {
+                if (String[i] != String[j])
+                    return false;
+            }
+            return true;
+        }
+
+        static void DrawRectangle() // Draws a rectangle with specific height and width.
+        {
+            // Request and validate dimensions for the rectangle
+            DisplayMessage("Enter an odd height (5 to 79): ", ConsoleColor.Yellow);
+            int Height = GetValidOddInput(5, 79); // Validate odd height
+
+            DisplayMessage("Enter an odd width (5 to 79): ", ConsoleColor.Yellow);
+            int Width = GetValidOddInput(5, 79); // Validate odd width
+
+            // Determine frame thickness for the rectangle
+            int FrameThicknessX = GetFrameThickness(Width);
+            int FrameThicknessY = GetFrameThickness(Height);
+
+            Console.Clear();
+            DisplayMessage("\nYour rectangle:\n", ConsoleColor.Cyan);
+
+            // Loop through rows and columns to draw the rectangle
+            for (int i = 0; i < Height; i++)
+            {
+                for (int j = 0; j < Width; j++)
+                {
+                    // Check if the current position is within the frame area
+                    if (i < FrameThicknessY || i >= Height - FrameThicknessY || j < FrameThicknessX || j >= Width - FrameThicknessX)
+                    {
+                        Console.Write("F"); // Frame character
+                    }
+                    else
+                    {
+                        // Calculate the fill values (1-9) based on a 3x3 pattern
+                        int value = ((i - FrameThicknessY) % 3) * 3 + ((j - FrameThicknessX) % 3) + 1;
+                        Console.Write(value);
+                    }
+                }
+                Console.WriteLine(); // Move to the next line after each row
+            }
+
+            Thread.Sleep(5000); // Pause to let the user review the rectangle
+        }
+
+        static int GetValidOddInput(int Min, int Max) // Validates an odd input within a specified range. -> Returns an odd integer within the range.
+        {
+            while (true)
+            {
+                int Input = ParseIntInput(); // Parse the input
+                if (Input >= Min && Input <= Max && Input % 2 != 0) // Validate the range and oddness
+                    return Input;
+
+                DisplayMessage($"Invalid input. Enter an odd number between {Min} and {Max}:", ConsoleColor.Red);
+            }
+        }
+
+        static int GetFrameThickness(int Dimension) // Determines the thickness of the frame that satisfies the rules. -> Returns the valid frame thickness.
+        {
+            for (int thickness = 3; thickness >= 1; thickness--) // Try maximum thickness of 3
+            {
+                int InnerDimension = Dimension - 2 * thickness;
+
+                // Ensure the inner area is divisible by 3
+                if (InnerDimension > 0 && InnerDimension % 3 == 0)
+                    return thickness;
+            }
+            return 1; // Default to minimum thickness
+        }
+
+        static int GetValidInput(int Min, int Max) // Validates input within a specific range. -> Returns an number input within the range.
+        {
+            while (true)
+            {
+                int input = ParseIntInput(); // Parse user input as an int
+                if (input >= Min && input <= Max) // Check if the input is within range
+                    return input;
+
+                // Display an error message if input is invalid
+                DisplayMessage($"Invalid input. Enter a number between {Min} and {Max}: ", ConsoleColor.Red);
+            }
+        }
+    }
+}
