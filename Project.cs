@@ -97,51 +97,98 @@ namespace Project_Class
             }
         }
 
-        static void ReverseNumbers() // Reverses a number in segments specified by the user.
+        static void ReverseNumbers() // Handles both the regular way and table way
         {
-            DisplayMessage("Enter a number to reverse: ", ConsoleColor.Yellow);
-            int Number = ParseIntInput();
+            DisplayMessage("You chose to reverse numbers!", ConsoleColor.Cyan);
 
-            DisplayMessage("Enter the digit group size to reverse by: ", ConsoleColor.Yellow);
-            int GroupSize = ParseIntInput();
+            // Ask the player how they want to process the reversal
+            DisplayMessage("\nChoose how you want to reverse numbers:", ConsoleColor.Cyan);
+            DisplayMessage("1. Regular way (Single number)", ConsoleColor.Yellow);
+            DisplayMessage("2. Table way (10 numbers)", ConsoleColor.Yellow);
 
-            if (GroupSize > 0)
+            int Choice = GetValidInput(1, 2); // Ensure valid input
+
+            if (Choice == 1)
             {
-                int Reversed = ReverseByParts(Number, GroupSize); // Reverse the number in groups
-                DisplayMessage($"Reversed number: {Reversed}", ConsoleColor.Green);
-            }
-            else
-            {
-                DisplayMessage("Invalid input for group size. Must be greater than 0.", ConsoleColor.Red);
-            }
-            Thread.Sleep(5000); // Pause to let the user read the result
-        }
+                // Regular way: Reverse a single number with a group size
+                DisplayMessage("Enter the number to reverse: ", ConsoleColor.Yellow);
+                int Number = ParseIntInput();
 
-        static int ReverseByParts(int Number, int Digit) // Reverses the digits of a number in groups of a specified size. -> Returns the reversed number.
-        {
-            int Reversed = 0; // Resulting reversed number
-            int Multi = 1; // Multiplier for positioning digits
+                DisplayMessage("Enter the group size for reversal: ", ConsoleColor.Yellow);
+                int GroupSize = ParseIntInput();
 
-            while (Number > 0)
-            {
-                int Part = Number % (int)Math.Pow(10, Digit); // Extract group of digits
-                Number /= (int)Math.Pow(10, Digit); // Remove extracted digits from the number
-
-                int ReversedPart = 0;
-                while (Part > 0) // Reverse the extracted group of digits
+                if (GroupSize <= 0)
                 {
-                    ReversedPart = ReversedPart * 10 + Part % 10;
-                    Part /= 10;
+                    DisplayMessage("Group size must be greater than 0!", ConsoleColor.Red);
+                    return;
                 }
 
-                Reversed += ReversedPart * Multi; // Add reversed group to the result
-                Multi *= (int)Math.Pow(10, Digit); // Update multiplier for the next group
+                string Reversed = ReverseByParts(Number, GroupSize);
+                DisplayMessage($"Reversed number: {Reversed}", ConsoleColor.Green);
+            }
+            else if (Choice == 2)
+            {
+                // Table way: Handle 10 numbers and display them in a table
+                HandleTableWay();
             }
 
-            return Reversed; // Return the fully reversed number
+            Thread.Sleep(5000); // Pause to let the user see the result
         }
 
-        static void AmicableNumbers() // Finds and displays amicable pairs near a given number.
+        static void HandleTableWay() // Prints out the table form of reverse numbers (Gets 10 numbers from the user)
+        {
+            const int NumberCount = 10;
+            int[] Numbers = new int[NumberCount];
+            string[,] ReversedTable = new string[NumberCount, 3]; // Rows: 10 numbers, Columns: groups 2, 3, 4
+
+            DisplayMessage("\nEnter 10 numbers to reverse:", ConsoleColor.Cyan);
+
+            // Collect 10 numbers from the user
+            for (int i = 0; i < NumberCount; i++)
+            {
+                DisplayMessage($"Enter number {i + 1}: ", ConsoleColor.Yellow);
+                Numbers[i] = ParseIntInput();
+            }
+
+            // Reverse each number for groups of 2, 3, and 4
+            for (int i = 0; i < NumberCount; i++)
+            {
+                ReversedTable[i, 0] = ReverseByParts(Numbers[i], 2); // Group of 2
+                ReversedTable[i, 1] = ReverseByParts(Numbers[i], 3); // Group of 3
+                ReversedTable[i, 2] = ReverseByParts(Numbers[i], 4); // Group of 4
+            }
+
+            // Display the table
+            DisplayMessage("\nReversed numbers table:", ConsoleColor.Cyan);
+            Console.WriteLine("Original\tGroup 2\t\tGroup 3\t\tGroup 4");
+            Console.WriteLine("--------\t--------\t--------\t--------");
+
+            for (int i = 0; i < NumberCount; i++)
+            {
+                Console.WriteLine($"{Numbers[i]}\t\t{ReversedTable[i, 0]}\t\t{ReversedTable[i, 1]}\t\t{ReversedTable[i, 2]}");
+            }
+        }
+
+            static string ReverseByParts(int number, int groupSize)
+        {
+            string NumberString = number.ToString();
+            char[] Reversed = new char[NumberString.Length];
+
+            // Reverse the number in groups
+            for (int i = 0; i < NumberString.Length; i += groupSize)
+            {
+                int End = Math.Min(i + groupSize, NumberString.Length); // Ensure we don't exceed the length
+                string Group = NumberString.Substring(i, End - i); // Get the current group
+                char[] GroupArray = Group.ToCharArray();
+
+                Array.Reverse(GroupArray); // Reverse the group
+                GroupArray.CopyTo(Reversed, i); // Copy the reversed group
+            }
+
+            return new string(Reversed).TrimEnd('\0'); // Convert char array to string
+        }
+
+            static void AmicableNumbers() // Finds and displays amicable pairs near a given number.
         {
             DisplayMessage("Enter a number between 3 and 10,000: ", ConsoleColor.Yellow);
             int Number = ParseIntInput();
