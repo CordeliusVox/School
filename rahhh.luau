@@ -1,36 +1,67 @@
-local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local TweenService = game:GetService("TweenService")
+local RarityManager = {}
 
-local player = Players.LocalPlayer
-local catchEvent = ReplicatedStorage:WaitForChild("CatchStar")
-local starFolder = game.Workspace.Sparks:WaitForChild("Stars_" .. player.UserId)
+-- Rarity definitions
+RarityManager.Rarities = {
+	{
+		name = "Common",
+		color = Color3.fromRGB(170, 170, 170),
+		value = 10,
+		probability = 0.60 -- 60%
+	},
+	{
+		name = "Uncommon",
+		color = Color3.fromRGB(0, 255, 0),
+		value = 20,
+		probability = 0.30 -- 30%
+	},
+	{
+		name = "Rare",
+		color = Color3.fromRGB(0, 0, 255),
+		value = 50,
+		probability = 0.05 -- 5%
+	},
+	{
+		name = "Legendary",
+		color = Color3.fromRGB(255, 215, 0),
+		value = 100,
+		probability = 0.05 -- 5%
+	}
+}
 
--- Animate a star
-local function animateStar(star: Part)
-	local originalPosition = star.Position
-	local tweenInfo = TweenInfo.new(
-		2, -- Duration
-		Enum.EasingStyle.Sine,
-		Enum.EasingDirection.InOut,
-		-1, -- Infinite
-		true -- Reverse
-	)
-	local tween = TweenService:Create(star, tweenInfo, {Position = originalPosition + Vector3.new(0, 1, 0)})
-	tween:Play()
+-- Debug tracking
+local spawnCounts = {Common = 0, Uncommon = 0, Rare = 0, Legendary = 0}
+
+-- Select a random rarity
+function RarityManager:GetRandomRarity(): {name: string, color: Color3, value: number, probability: number}
+	local rand = math.random()
+	local cumulative = 0
+	for _, rarity in ipairs(self.Rarities) do
+		cumulative += rarity.probability
+		if rand <= cumulative then
+			spawnCounts[rarity.name] = spawnCounts[rarity.name] + 1
+			if spawnCounts[rarity.name] % 10 == 0 then -- Log every 10 spawns
+				print(string.format("Spawned %s (%d total, %.2f%%)", rarity.name, spawnCounts[rarity.name], (spawnCounts[rarity.name] / sumCounts()) * 100))
+			end
+			return rarity
+		end
+	end
+	return self.Rarities[1] -- Fallback
 end
 
--- Handle new stars
-starFolder.ChildAdded:Connect(function(star)
-	animateStar(star)
-end)
-
--- Animate existing stars
-for _, star in ipairs(starFolder:GetChildren()) do
-	animateStar(star)
+-- Helper to sum spawn counts
+local function sumCounts(): number
+	local total = 0
+	for _, count in pairs(spawnCounts) do
+		total += count
+	end
+	return total
 end
 
--- Catch feedback (placeholder)
-catchEvent.OnClientEvent:Connect(function(rarity: string, position: Vector3)
-	print("Caught a " .. rarity .. " star at " .. tostring(position))
-end)
+-- Reset counts (for testing)
+function RarityManager:ResetCounts()
+	for key in pairs(spawnCounts) do
+		spawnCounts[key] = 0
+	end
+end
+
+return RarityManager
