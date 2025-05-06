@@ -1,104 +1,71 @@
-local RarityManager = require(script.Parent.RarityManager)
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local DataStoreService = game:GetService("DataStoreService")
+local StarManager = require(script.Parent.StarManager)
 
-local StarManager = {}
-StarManager.__index = StarManager
-
--- Constructor
-function StarManager.new(player: Player, maxStars: number, spawnAreaMin: Vector3, spawnAreaMax: Vector3, minPadding: number)
-	local self = setmetatable({}, StarManager)
-	self.player = player
-	self.maxzStars = maxStars
-	self.spawnAreaMin = spawnAreaMin
-	self.spawnAreaMax = spawnAreaMax
-	self.minPadding = minPadding
-	self.starFolder = Instance.new("Folder")
-	self.starFolder.Name = "Stars_" .. player.UserId
-	self.starFolder.Parent = game.Workspace.Sparks
-	self.stars = {}
-	self:InitializeStars()
-	return self
+-- Initialize Sparks folder
+if not game.Workspace:FindFirstChild("Sparks") then
+	Instance.new("Folder", game.Workspace).Name = "Sparks"
 end
 
--- Check if a position is valid (respects padding)
-function StarManager:IsValidPosition(position: Vector3): boolean
-	for _, star in ipairs(self.stars) do
-		if (star.Position - position).Magnitude < self.minPadding then
-			return false
-		end
+-- RemoteEvent
+local catchEvent = Instance.new("RemoteEvent")
+catchEvent.Name = "CatchStar"
+catchEvent.Parent = ReplicatedStorage
+
+-- Player data
+local playerStarManagers = {}
+local playerInventories = {}
+local inventoryStore = DataStoreService:GetDataStore("PlayerInventories")
+
+-- Configuration
+local MAX_STARS_PER_PLAYER = 10
+local SPAWN_AREA_MIN = Vector3.new(-25, 5, -25)
+local SPAWN_AREA_MAX = Vector3.new(25, 15, 25)
+local MIN_PADDING = 5 -- Minimum distance between stars (studs)
+
+-- Player join
+Players.PlayerAdded:Connect(function(player)
+	-- Initialize star manager
+	local starManager = StarManager.new(player, MAX_STARS_PER_PLAYER, SPAWN_AREA_MIN, SPAWN_AREA_MAX, MIN_PADDING)
+	playerStarManagers[player.UserId] = starManager
+	
+	-- Initialize inventory
+	local success, inventory = pcall(function()
+		return inventoryStore:GetAsync(tostring(player.UserId)) or {Common = 0, Uncommon = 0, Rare = 0, Legendary = 0}
+	end)
+	if success then
+		playerInventories[player.UserId] = inventory
+	else
+		playerInventories[player.UserId] = {Common = 0, Uncommon = 0, Rare = 0, Legendary = 0}
 	end
-	return true
-end
+end)
 
--- Spawn a single star with padding
-function StarManager:SpawnStar()
-	if #self.stars >= self.maxStars then return end
-	local rarity = RarityManager:GetRandomRarity()
-	local maxAttempts = 10
-	local position: Vector3?
-	
-	for _ = 1, maxAttempts do
-		local tryPosition = Vector3.new(
-			math.random(self.spawnAreaMin.X, self.spawnAreaMax.X),
-			math.random(self.spawnAreaMin.Y, self.spawnAreaMax.Y),
-			math.random(self.spawnAreaMin.Z, self.spawnAreaMax.Z)
-		)
-		if self:IsValidPosition(tryPosition) then
-			position = tryPosition
-			break
-		end
+-- Player leave
+Players.PlayerRemoving:Connect(function(player)
+	local starManager = playerStarManagers[player.UserId]
+	if starManager then
+		starManager:Destroy()
+		playerStarManagers[player.UserId] = nil
 	end
-	
-	if not position then return end -- Skip if no valid position found
-	
-	local star = Instance.new("Part")
-	star.Name = rarity.name .. "Star"
-	star.Size = Vector3.new(1, 1, 1)
-	star.Shape = Enum.PartType.Ball
-	star.Position = position
-	star.Anchored = true
-	star.CanCollide = false
-	star.Color = rarity.color
-	star.Parent = self.starFolder
-	
-	-- Secure ownership
-	local ownerTag = Instance.new("StringValue")
-	ownerTag.Name = "OwnerUserId"
-	ownerTag.Value = tostring(self.player.UserId)
-	ownerTag.Parent = star
-	
-	table.insert(self.stars, star)
-end
-
--- Initialize all stars
-function StarManager:InitializeStars()
-	for _ = 1, self.maxStars do
-		self:SpawnStar()
+	local inventory = playerInventories[player.UserId]
+	if inventory then
+		pcall(function()
+			inventoryStore:SetAsync(tostring(player.UserId), inventory)
+		end)
+		playerInventories[player.UserId] = nil
 	end
-end
+end)
 
--- Update: Spawn a new star after delay if below max
-function StarManager:Update()
-	if #self.stars >= self.maxStars then return end
-	task.wait(3) -- Wait 3 seconds
-	self:SpawnStar()
-end
-
--- Remove a star
-function StarManager:RemoveStar(star: Part)
-	for i, s in ipairs(self.stars) do
-		if s == star then
-			table.remove(self.stars, i)
-			star:Destroy()
-			self:Update()
-			break
-		end
-	end
-end
-
--- Cleanup
-function StarManager:Destroy()
-	self.starFolder:Destroy()
-	self.stars = {}
-end
-
-return StarManager
+-- Handle catch
+catchEvent.OnServerEvent:Connect(function(player, starName)
+	local starManager = playerStarManagers[player.UserId]
+	if not starManager then return end
+	local star = starManager.starFolder:FindFirstChild(starName)
+	if not star or star.OwnerUserId.Value ~= tostring(player.UserId) then return end
+	
+	local rarity = star.Name:gsub("Star", "")
+	playerInventories[player.UserId][rarity] = playerInventories[player.UserId][rarity] + 1
+	starManager:RemoveStar(star)
+	catchEvent:FireClient(player, rarity, star.Position)
+end)
